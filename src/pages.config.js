@@ -4,6 +4,8 @@ import Water from './pages/Water';
 import Pool from './pages/Pool';
 import Equipment from './pages/Equipment';
 import Maintenance from './pages/Maintenance';
+import Fuel from './pages/Fuel';
+import Analytics from './pages/Analytics';
 import Layout from './Layout.jsx';
 
 
@@ -14,6 +16,8 @@ export const PAGES = {
     "Pool": Pool,
     "Equipment": Equipment,
     "Maintenance": Maintenance,
+    "Fuel": Fuel,
+    "Analytics": Analytics,
 }
 
 export const pagesConfig = {

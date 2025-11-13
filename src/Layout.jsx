@@ -9,7 +9,8 @@ import {
   LogOut,
   Package,
   Wrench,
-  Calendar
+  Flame,
+  BarChart3
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,39 +34,65 @@ const navigationItems = [
     title: "Panel de Control",
     url: createPageUrl("Dashboard"),
     icon: LayoutDashboard,
-    gradient: "from-blue-500 to-cyan-500"
+    gradient: "from-blue-500 to-cyan-500",
+    category: "principal"
+  },
+  {
+    title: "Analíticas y KPIs",
+    url: createPageUrl("Analytics"),
+    icon: BarChart3,
+    gradient: "from-violet-500 to-purple-600",
+    category: "principal"
   },
   {
     title: "Inventario de Equipos",
     url: createPageUrl("Equipment"),
     icon: Package,
-    gradient: "from-indigo-500 to-purple-500"
+    gradient: "from-indigo-500 to-purple-500",
+    category: "gestion"
   },
   {
     title: "Mantenimientos",
     url: createPageUrl("Maintenance"),
     icon: Wrench,
-    gradient: "from-green-500 to-emerald-500"
+    gradient: "from-green-500 to-emerald-500",
+    category: "gestion"
   },
   {
     title: "Energía",
     url: createPageUrl("Energy"),
     icon: Zap,
-    gradient: "from-amber-500 to-orange-500"
+    gradient: "from-amber-500 to-orange-500",
+    category: "consumos"
   },
   {
     title: "Agua y ACS",
     url: createPageUrl("Water"),
     icon: Droplets,
-    gradient: "from-blue-400 to-blue-600"
+    gradient: "from-blue-400 to-blue-600",
+    category: "consumos"
+  },
+  {
+    title: "Gases y Combustibles",
+    url: createPageUrl("Fuel"),
+    icon: Flame,
+    gradient: "from-orange-500 to-red-600",
+    category: "consumos"
   },
   {
     title: "Piscina",
     url: createPageUrl("Pool"),
     icon: Waves,
-    gradient: "from-cyan-400 to-teal-500"
+    gradient: "from-cyan-400 to-teal-500",
+    category: "consumos"
   },
 ];
+
+const categories = {
+  principal: "Principal",
+  gestion: "Gestión",
+  consumos: "Consumos"
+};
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
@@ -78,6 +105,12 @@ export default function Layout({ children, currentPageName }) {
   const handleLogout = () => {
     base44.auth.logout();
   };
+
+  const groupedNav = navigationItems.reduce((acc, item) => {
+    if (!acc[item.category]) acc[item.category] = [];
+    acc[item.category].push(item);
+    return acc;
+  }, {});
 
   return (
     <SidebarProvider>
@@ -124,40 +157,42 @@ export default function Layout({ children, currentPageName }) {
           </SidebarHeader>
           
           <SidebarContent className="p-3">
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-3 mb-1">
-                Navegación
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu className="space-y-1">
-                  {navigationItems.map((item) => {
-                    const isActive = location.pathname === item.url;
-                    return (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton 
-                          asChild 
-                          className={`
-                            relative overflow-hidden transition-all duration-300 rounded-xl
-                            ${isActive 
-                              ? 'bg-gradient-to-r ' + item.gradient + ' text-white shadow-lg scale-105' 
-                              : 'hover:bg-white/60 text-slate-700 hover:shadow-md'
-                            }
-                          `}
-                        >
-                          <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
-                            <item.icon className={`w-5 h-5 ${isActive ? 'animate-pulse' : ''}`} />
-                            <span className="font-semibold text-sm">{item.title}</span>
-                            {isActive && (
-                              <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                            )}
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            {Object.entries(groupedNav).map(([category, items]) => (
+              <SidebarGroup key={category}>
+                <SidebarGroupLabel className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-3 mb-1">
+                  {categories[category]}
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu className="space-y-1">
+                    {items.map((item) => {
+                      const isActive = location.pathname === item.url;
+                      return (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton 
+                            asChild 
+                            className={`
+                              relative overflow-hidden transition-all duration-300 rounded-xl
+                              ${isActive 
+                                ? 'bg-gradient-to-r ' + item.gradient + ' text-white shadow-lg scale-105' 
+                                : 'hover:bg-white/60 text-slate-700 hover:shadow-md'
+                              }
+                            `}
+                          >
+                            <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
+                              <item.icon className={`w-5 h-5 ${isActive ? 'animate-pulse' : ''}`} />
+                              <span className="font-semibold text-sm">{item.title}</span>
+                              {isActive && (
+                                <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                              )}
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      );
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            ))}
 
             <SidebarGroup className="mt-6">
               <SidebarGroupLabel className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-3 mb-2">
