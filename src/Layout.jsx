@@ -10,7 +10,8 @@ import {
   Package,
   Wrench,
   Flame,
-  BarChart3
+  BarChart3,
+  Users
 } from "lucide-react";
 import {
   Sidebar,
@@ -56,6 +57,13 @@ const navigationItems = [
     url: createPageUrl("Maintenance"),
     icon: Wrench,
     gradient: "from-green-500 to-emerald-500",
+    category: "gestion"
+  },
+  {
+    title: "Ocupación",
+    url: createPageUrl("Occupancy"),
+    icon: Users,
+    gradient: "from-purple-500 to-pink-500",
     category: "gestion"
   },
   {

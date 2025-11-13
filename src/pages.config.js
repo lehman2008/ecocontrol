@@ -6,6 +6,7 @@ import Equipment from './pages/Equipment';
 import Maintenance from './pages/Maintenance';
 import Fuel from './pages/Fuel';
 import Analytics from './pages/Analytics';
+import Occupancy from './pages/Occupancy';
 import Layout from './Layout.jsx';
 
 
@@ -18,6 +19,7 @@ export const PAGES = {
     "Maintenance": Maintenance,
     "Fuel": Fuel,
     "Analytics": Analytics,
+    "Occupancy": Occupancy,
 }
 
 export const pagesConfig = {
