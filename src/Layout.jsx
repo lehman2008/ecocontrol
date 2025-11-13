@@ -7,8 +7,9 @@ import {
   Waves, 
   LayoutDashboard,
   LogOut,
-  Menu,
-  X
+  Package,
+  Wrench,
+  Calendar
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,6 +34,18 @@ const navigationItems = [
     url: createPageUrl("Dashboard"),
     icon: LayoutDashboard,
     gradient: "from-blue-500 to-cyan-500"
+  },
+  {
+    title: "Inventario de Equipos",
+    url: createPageUrl("Equipment"),
+    icon: Package,
+    gradient: "from-indigo-500 to-purple-500"
+  },
+  {
+    title: "Mantenimientos",
+    url: createPageUrl("Maintenance"),
+    icon: Wrench,
+    gradient: "from-green-500 to-emerald-500"
   },
   {
     title: "Energía",
