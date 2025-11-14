@@ -13,7 +13,8 @@ import {
   BarChart3,
   Users,
   FileText,
-  Radio
+  Radio,
+  Map
 } from "lucide-react";
 import {
   Sidebar,
@@ -73,6 +74,13 @@ const navigationItems = [
     url: createPageUrl("Occupancy"),
     icon: Users,
     gradient: "from-purple-500 to-pink-500",
+    category: "gestion"
+  },
+  {
+    title: "Planos Interactivos",
+    url: createPageUrl("Blueprints"),
+    icon: Map,
+    gradient: "from-blue-600 to-indigo-700",
     category: "gestion"
   },
   {
