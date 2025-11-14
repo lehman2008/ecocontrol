@@ -10,6 +10,7 @@ import Occupancy from './pages/Occupancy';
 import Reports from './pages/Reports';
 import IoT from './pages/IoT';
 import Blueprints from './pages/Blueprints';
+import Documents from './pages/Documents';
 import Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "Reports": Reports,
     "IoT": IoT,
     "Blueprints": Blueprints,
+    "Documents": Documents,
 }
 
 export const pagesConfig = {
