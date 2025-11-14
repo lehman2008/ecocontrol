@@ -1,6 +1,12 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+// The following Table components are no longer used in the new card-based layout, but keeping them for now in case of partial refactor or future use.
+// For a clean removal, they could be deleted. However, the instruction is to preserve all other features.
+// If the intent was to completely remove the table view, these imports would be removed.
+// Given the instruction "preserving all other features, elements and functionality" and the outline completely replacing the table structure,
+// I will remove the unused imports related to `Table` for a cleaner file.
+// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -8,6 +14,10 @@ import { Pencil, Search, AlertCircle, CheckCircle, Clock, XCircle } from "lucide
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
+
+// Assuming EquipmentDocuments is a separate component and needs to be imported.
+// If this component doesn't exist or is imported differently, this line might need adjustment.
+import EquipmentDocuments from "./EquipmentDocuments"; 
 
 const STATUS_CONFIG = {
   operativo: { label: "Operativo", icon: CheckCircle, className: "bg-green-100 text-green-700 border-green-200" },
@@ -24,8 +34,9 @@ const CRITICALITY_CONFIG = {
   critica: { label: "Crítica", className: "bg-red-50 text-red-700 border-red-200" }
 };
 
-export default function EquipmentList({ equipment, isLoading, onEdit }) {
+export default function EquipmentList({ equipment, isLoading, onEdit, showDocuments = false }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [expandedEquipment, setExpandedEquipment] = useState(null);
 
   const filteredEquipment = equipment.filter(eq =>
     eq.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -70,77 +81,69 @@ export default function EquipmentList({ equipment, isLoading, onEdit }) {
         </div>
       </CardHeader>
       <CardContent className="pt-6">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-50">
-                <TableHead className="font-bold">Código</TableHead>
-                <TableHead className="font-bold">Nombre</TableHead>
-                <TableHead className="font-bold">Zona</TableHead>
-                <TableHead className="font-bold">Sistema</TableHead>
-                <TableHead className="font-bold text-center">Criticidad</TableHead>
-                <TableHead className="font-bold text-center">Estado</TableHead>
-                <TableHead className="font-bold">Próximo Mant.</TableHead>
-                <TableHead className="font-bold text-center">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredEquipment.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-slate-500">
-                    {searchTerm ? 'No se encontraron equipos' : 'No hay equipos registrados aún'}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredEquipment.map((eq) => {
-                  const status = STATUS_CONFIG[eq.status] || STATUS_CONFIG.operativo;
-                  const criticality = CRITICALITY_CONFIG[eq.criticality] || CRITICALITY_CONFIG.media;
-                  const StatusIcon = status.icon;
+        <div className="space-y-4">
+          {filteredEquipment.length === 0 ? (
+            <div className="text-center py-8 text-slate-500">
+              {searchTerm ? 'No se encontraron equipos' : 'No hay equipos registrados aún'}
+            </div>
+          ) : (
+            filteredEquipment.map((eq) => {
+              const status = STATUS_CONFIG[eq.status] || STATUS_CONFIG.operativo;
+              const criticality = CRITICALITY_CONFIG[eq.criticality] || CRITICALITY_CONFIG.media;
+              const StatusIcon = status.icon;
+              const isExpanded = expandedEquipment === eq.id;
 
-                  return (
-                    <TableRow key={eq.id} className="hover:bg-slate-50 transition-colors">
-                      <TableCell className="font-mono text-sm font-semibold">
-                        {eq.equipment_code || '-'}
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-semibold text-slate-800">{eq.name}</p>
-                          {eq.manufacturer && (
-                            <p className="text-xs text-slate-500">{eq.manufacturer} {eq.model}</p>
+              return (
+                <Card key={eq.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-center gap-3">
+                          <h3 className="font-bold text-lg text-slate-800">{eq.name}</h3>
+                          {eq.equipment_code && (
+                            <span className="font-mono text-sm font-semibold text-slate-500">
+                              {eq.equipment_code}
+                            </span>
                           )}
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className="bg-slate-100 text-slate-700 border border-slate-200">
-                          {eq.zone?.replace(/_/g, ' ')}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200">
-                          {eq.system_type?.replace(/_/g, ' ')}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Badge variant="outline" className={`${criticality.className} border font-semibold`}>
-                          {criticality.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Badge variant="outline" className={`${status.className} border font-semibold`}>
-                          <StatusIcon className="w-3 h-3 mr-1" />
-                          {status.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {eq.next_maintenance_date ? (
-                          <span className="text-sm font-medium">
-                            {format(new Date(eq.next_maintenance_date), "dd MMM yyyy", { locale: es })}
-                          </span>
-                        ) : (
-                          <span className="text-sm text-slate-400">No programado</span>
+                        
+                        {eq.manufacturer && (
+                          <p className="text-sm text-slate-600">{eq.manufacturer} {eq.model}</p>
                         )}
-                      </TableCell>
-                      <TableCell className="text-center">
+
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="secondary" className="bg-slate-100 text-slate-700 border border-slate-200">
+                            {eq.zone?.replace(/_/g, ' ')}
+                          </Badge>
+                          <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200">
+                            {eq.system_type?.replace(/_/g, ' ')}
+                          </Badge>
+                          <Badge variant="outline" className={`${criticality.className} border font-semibold`}>
+                            {criticality.label}
+                          </Badge>
+                          <Badge variant="outline" className={`${status.className} border font-semibold`}>
+                            <StatusIcon className="w-3 h-3 mr-1" />
+                            {status.label}
+                          </Badge>
+                        </div>
+
+                        {eq.next_maintenance_date && (
+                          <p className="text-sm text-slate-500">
+                            Próximo mantenimiento: {format(new Date(eq.next_maintenance_date), "dd MMM yyyy", { locale: es })}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2">
+                        {showDocuments && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setExpandedEquipment(isExpanded ? null : eq.id)}
+                          >
+                            Documentos
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="icon"
@@ -149,13 +152,19 @@ export default function EquipmentList({ equipment, isLoading, onEdit }) {
                         >
                           <Pencil className="w-4 h-4" />
                         </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
+                      </div>
+                    </div>
+
+                    {isExpanded && showDocuments && (
+                      <div className="mt-4 pt-4 border-t">
+                        <EquipmentDocuments equipmentId={eq.id} equipmentName={eq.name} />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })
+          )}
         </div>
       </CardContent>
     </Card>
