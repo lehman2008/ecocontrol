@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -96,6 +97,13 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Blueprints"),
       icon: Map,
       gradient: "from-blue-600 to-indigo-700",
+      category: "management"
+    },
+    {
+      title: t('documents'),
+      url: createPageUrl("Documents"),
+      icon: FileText,
+      gradient: "from-cyan-600 to-blue-700",
       category: "management"
     },
     {
