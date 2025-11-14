@@ -201,6 +201,14 @@ function LayoutContent({ children, currentPageName }) {
           </SidebarHeader>
           
           <SidebarContent className="p-3">
+            <SidebarGroup className="mb-4">
+              <SidebarGroupContent>
+                <div className="mx-2">
+                  <LanguageSelector />
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
             {Object.entries(groupedNav).map(([category, items]) => (
               <SidebarGroup key={category}>
                 <SidebarGroupLabel className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-3 mb-1">
@@ -252,14 +260,6 @@ function LayoutContent({ children, currentPageName }) {
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                     <span className="text-xs text-slate-600">{t('operational')}</span>
                   </div>
-                </div>
-              </SidebarGroupContent>
-            </SidebarGroup>
-
-            <SidebarGroup className="mt-4">
-              <SidebarGroupContent>
-                <div className="mx-2">
-                  <LanguageSelector />
                 </div>
               </SidebarGroupContent>
             </SidebarGroup>
