@@ -32,104 +32,13 @@ import {
 } from "@/components/ui/sidebar";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
+import { LanguageProvider, useLanguage } from "@/components/shared/LanguageContext";
+import LanguageSelector from "@/components/shared/LanguageSelector";
 
-const navigationItems = [
-  {
-    title: "Panel de Control",
-    url: createPageUrl("Dashboard"),
-    icon: LayoutDashboard,
-    gradient: "from-blue-500 to-cyan-500",
-    category: "principal"
-  },
-  {
-    title: "Analíticas y KPIs",
-    url: createPageUrl("Analytics"),
-    icon: BarChart3,
-    gradient: "from-violet-500 to-purple-600",
-    category: "principal"
-  },
-  {
-    title: "Reportes PDF",
-    url: createPageUrl("Reports"),
-    icon: FileText,
-    gradient: "from-pink-500 to-rose-600",
-    category: "principal"
-  },
-  {
-    title: "Inventario de Equipos",
-    url: createPageUrl("Equipment"),
-    icon: Package,
-    gradient: "from-indigo-500 to-purple-500",
-    category: "gestion"
-  },
-  {
-    title: "Mantenimientos",
-    url: createPageUrl("Maintenance"),
-    icon: Wrench,
-    gradient: "from-green-500 to-emerald-500",
-    category: "gestion"
-  },
-  {
-    title: "Ocupación",
-    url: createPageUrl("Occupancy"),
-    icon: Users,
-    gradient: "from-purple-500 to-pink-500",
-    category: "gestion"
-  },
-  {
-    title: "Planos Interactivos",
-    url: createPageUrl("Blueprints"),
-    icon: Map,
-    gradient: "from-blue-600 to-indigo-700",
-    category: "gestion"
-  },
-  {
-    title: "Monitorización IoT",
-    url: createPageUrl("IoT"),
-    icon: Radio,
-    gradient: "from-cyan-500 to-blue-600",
-    category: "iot"
-  },
-  {
-    title: "Energía",
-    url: createPageUrl("Energy"),
-    icon: Zap,
-    gradient: "from-amber-500 to-orange-500",
-    category: "consumos"
-  },
-  {
-    title: "Agua y ACS",
-    url: createPageUrl("Water"),
-    icon: Droplets,
-    gradient: "from-blue-400 to-blue-600",
-    category: "consumos"
-  },
-  {
-    title: "Gases y Combustibles",
-    url: createPageUrl("Fuel"),
-    icon: Flame,
-    gradient: "from-orange-500 to-red-600",
-    category: "consumos"
-  },
-  {
-    title: "Piscina",
-    url: createPageUrl("Pool"),
-    icon: Waves,
-    gradient: "from-cyan-400 to-teal-500",
-    category: "consumos"
-  },
-];
-
-const categories = {
-  principal: "Principal",
-  gestion: "Gestión",
-  iot: "IoT & Sensores",
-  consumos: "Consumos"
-};
-
-export default function Layout({ children, currentPageName }) {
+function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
   const [user, setUser] = React.useState(null);
+  const { t } = useLanguage();
 
   React.useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
@@ -137,6 +46,100 @@ export default function Layout({ children, currentPageName }) {
 
   const handleLogout = () => {
     base44.auth.logout();
+  };
+
+  const navigationItems = [
+    {
+      title: t('dashboard'),
+      url: createPageUrl("Dashboard"),
+      icon: LayoutDashboard,
+      gradient: "from-blue-500 to-cyan-500",
+      category: "principal"
+    },
+    {
+      title: t('analytics'),
+      url: createPageUrl("Analytics"),
+      icon: BarChart3,
+      gradient: "from-violet-500 to-purple-600",
+      category: "principal"
+    },
+    {
+      title: t('reports'),
+      url: createPageUrl("Reports"),
+      icon: FileText,
+      gradient: "from-pink-500 to-rose-600",
+      category: "principal"
+    },
+    {
+      title: t('equipment'),
+      url: createPageUrl("Equipment"),
+      icon: Package,
+      gradient: "from-indigo-500 to-purple-500",
+      category: "management"
+    },
+    {
+      title: t('maintenance'),
+      url: createPageUrl("Maintenance"),
+      icon: Wrench,
+      gradient: "from-green-500 to-emerald-500",
+      category: "management"
+    },
+    {
+      title: t('occupancy'),
+      url: createPageUrl("Occupancy"),
+      icon: Users,
+      gradient: "from-purple-500 to-pink-500",
+      category: "management"
+    },
+    {
+      title: t('blueprints'),
+      url: createPageUrl("Blueprints"),
+      icon: Map,
+      gradient: "from-blue-600 to-indigo-700",
+      category: "management"
+    },
+    {
+      title: t('iot'),
+      url: createPageUrl("IoT"),
+      icon: Radio,
+      gradient: "from-cyan-500 to-blue-600",
+      category: "iot"
+    },
+    {
+      title: t('energy'),
+      url: createPageUrl("Energy"),
+      icon: Zap,
+      gradient: "from-amber-500 to-orange-500",
+      category: "consumption"
+    },
+    {
+      title: t('water'),
+      url: createPageUrl("Water"),
+      icon: Droplets,
+      gradient: "from-blue-400 to-blue-600",
+      category: "consumption"
+    },
+    {
+      title: t('fuel'),
+      url: createPageUrl("Fuel"),
+      icon: Flame,
+      gradient: "from-orange-500 to-red-600",
+      category: "consumption"
+    },
+    {
+      title: t('pool'),
+      url: createPageUrl("Pool"),
+      icon: Waves,
+      gradient: "from-cyan-400 to-teal-500",
+      category: "consumption"
+    },
+  ];
+
+  const categories = {
+    principal: t('principal'),
+    management: t('management'),
+    iot: t('iotSensors'),
+    consumption: t('consumption')
   };
 
   const groupedNav = navigationItems.reduce((acc, item) => {
@@ -237,18 +240,26 @@ export default function Layout({ children, currentPageName }) {
 
             <SidebarGroup className="mt-6">
               <SidebarGroupLabel className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-3 mb-2">
-                Estado del Sistema
+                {t('systemStatus')}
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <div className="px-4 py-3 space-y-3 bg-white/40 rounded-xl mx-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-600 font-medium">Última actualización</span>
+                    <span className="text-slate-600 font-medium">{t('lastUpdate')}</span>
                     <span className="font-bold text-slate-800">Hoy</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-slate-600">Sistema operativo</span>
+                    <span className="text-xs text-slate-600">{t('operational')}</span>
                   </div>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            <SidebarGroup className="mt-4">
+              <SidebarGroupContent>
+                <div className="mx-2">
+                  <LanguageSelector />
                 </div>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -275,6 +286,7 @@ export default function Layout({ children, currentPageName }) {
                   size="icon"
                   onClick={handleLogout}
                   className="hover:bg-red-50 hover:text-red-600 transition-colors rounded-lg"
+                  title={t('logout')}
                 >
                   <LogOut className="w-4 h-4" />
                 </Button>
@@ -285,9 +297,12 @@ export default function Layout({ children, currentPageName }) {
 
         <main className="flex-1 flex flex-col overflow-hidden">
           <header className="bg-white/60 backdrop-blur-md border-b border-white/80 px-6 py-4 md:hidden shadow-sm">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-xl transition-all" />
-              <h1 className="text-xl font-bold gradient-text">EcoControl</h1>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-xl transition-all" />
+                <h1 className="text-xl font-bold gradient-text">EcoControl</h1>
+              </div>
+              <LanguageSelector compact />
             </div>
           </header>
 
@@ -297,5 +312,13 @@ export default function Layout({ children, currentPageName }) {
         </main>
       </div>
     </SidebarProvider>
+  );
+}
+
+export default function Layout({ children, currentPageName }) {
+  return (
+    <LanguageProvider>
+      <LayoutContent children={children} currentPageName={currentPageName} />
+    </LanguageProvider>
   );
 }
