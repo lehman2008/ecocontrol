@@ -11,7 +11,9 @@ import {
   Wrench,
   Flame,
   BarChart3,
-  Users
+  Users,
+  FileText,
+  Radio
 } from "lucide-react";
 import {
   Sidebar,
@@ -46,6 +48,13 @@ const navigationItems = [
     category: "principal"
   },
   {
+    title: "Reportes PDF",
+    url: createPageUrl("Reports"),
+    icon: FileText,
+    gradient: "from-pink-500 to-rose-600",
+    category: "principal"
+  },
+  {
     title: "Inventario de Equipos",
     url: createPageUrl("Equipment"),
     icon: Package,
@@ -65,6 +74,13 @@ const navigationItems = [
     icon: Users,
     gradient: "from-purple-500 to-pink-500",
     category: "gestion"
+  },
+  {
+    title: "Monitorización IoT",
+    url: createPageUrl("IoT"),
+    icon: Radio,
+    gradient: "from-cyan-500 to-blue-600",
+    category: "iot"
   },
   {
     title: "Energía",
@@ -99,6 +115,7 @@ const navigationItems = [
 const categories = {
   principal: "Principal",
   gestion: "Gestión",
+  iot: "IoT & Sensores",
   consumos: "Consumos"
 };
 
@@ -147,6 +164,14 @@ export default function Layout({ children, currentPageName }) {
           background: rgba(255, 255, 255, 0.7);
           backdrop-filter: blur(10px);
           border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
         }
       `}</style>
       
