@@ -11,6 +11,7 @@ import Reports from './pages/Reports';
 import IoT from './pages/IoT';
 import Blueprints from './pages/Blueprints';
 import Documents from './pages/Documents';
+import Alerts from './pages/Alerts';
 import Layout from './Layout.jsx';
 
 
@@ -28,6 +29,7 @@ export const PAGES = {
     "IoT": IoT,
     "Blueprints": Blueprints,
     "Documents": Documents,
+    "Alerts": Alerts,
 }
 
 export const pagesConfig = {

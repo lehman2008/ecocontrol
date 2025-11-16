@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -15,7 +14,8 @@ import {
   Users,
   FileText,
   Radio,
-  Map
+  Map,
+  Bell
 } from "lucide-react";
 import {
   Sidebar,
@@ -35,6 +35,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { LanguageProvider, useLanguage } from "@/components/shared/LanguageContext";
 import LanguageSelector from "@/components/shared/LanguageSelector";
+import NotificationBell from "@/components/shared/NotificationBell";
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
@@ -69,6 +70,13 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Reports"),
       icon: FileText,
       gradient: "from-pink-500 to-rose-600",
+      category: "principal"
+    },
+    {
+      title: "Alertas",
+      url: createPageUrl("Alerts"),
+      icon: Bell,
+      gradient: "from-orange-500 to-red-600",
       category: "principal"
     },
     {
@@ -304,13 +312,19 @@ function LayoutContent({ children, currentPageName }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col overflow-hidden">
-          <header className="bg-white/60 backdrop-blur-md border-b border-white/80 px-6 py-4 md:hidden shadow-sm">
+          <header className="bg-white/60 backdrop-blur-md border-b border-white/80 px-6 py-4 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 md:hidden">
                 <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-xl transition-all" />
                 <h1 className="text-xl font-bold gradient-text">EcoControl</h1>
               </div>
-              <LanguageSelector compact />
+              <div className="hidden md:block" />
+              <div className="flex items-center gap-3">
+                <NotificationBell />
+                <div className="md:hidden">
+                  <LanguageSelector compact />
+                </div>
+              </div>
             </div>
           </header>
 
