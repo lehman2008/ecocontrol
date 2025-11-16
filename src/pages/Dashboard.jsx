@@ -38,41 +38,50 @@ export default function Dashboard() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: energyReadings = [] } = useQuery({
     queryKey: ['energyReadings'],
     queryFn: () => base44.entities.EnergyReading.list('-reading_date', 50),
+    retry: 1,
   });
 
   const { data: waterReadings = [] } = useQuery({
     queryKey: ['waterReadings'],
     queryFn: () => base44.entities.WaterReading.list('-reading_date', 50),
+    retry: 1,
   });
 
   const { data: fuelReadings = [] } = useQuery({
     queryKey: ['gasConsumption'],
     queryFn: () => base44.entities.GasConsumption.list('-reading_date', 50),
+    retry: 1,
   });
 
   const { data: poolMeasurements = [] } = useQuery({
     queryKey: ['poolMeasurements'],
     queryFn: () => base44.entities.PoolMeasurement.list('-measurement_date', 20),
+    retry: 1,
   });
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
     queryFn: () => base44.entities.Equipment.list(),
+    retry: 1,
   });
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['maintenanceTasks'],
     queryFn: () => base44.entities.MaintenanceTask.list('-scheduled_date'),
+    retry: 1,
   });
 
   const { data: occupancyData = [] } = useQuery({
     queryKey: ['occupancyData'],
     queryFn: () => base44.entities.OccupancyData.list('-date', 30),
+    retry: 1,
   });
 
   const updateLayoutMutation = useMutation({
@@ -80,6 +89,7 @@ export default function Dashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
     },
+    retry: 1,
   });
 
   useEffect(() => {
@@ -184,7 +194,6 @@ export default function Dashboard() {
   return (
     <div className="p-4 md:p-8 min-h-screen">
       <div className="max-w-[1600px] mx-auto space-y-6">
-        {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-cyan-600 bg-clip-text text-transparent">
@@ -212,7 +221,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Customizer */}
         <AnimatePresence>
           {showCustomizer && (
             <motion.div
@@ -229,7 +237,6 @@ export default function Dashboard() {
           )}
         </AnimatePresence>
 
-        {/* Draggable Widgets */}
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="dashboard">
             {(provided) => (
