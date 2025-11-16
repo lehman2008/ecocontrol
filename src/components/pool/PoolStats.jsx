@@ -1,87 +1,80 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Waves, ThermometerSun, Droplet, AlertTriangle } from "lucide-react";
+import { Waves, CheckCircle, AlertTriangle, Activity, FileCheck } from "lucide-react";
 
 export default function PoolStats({ measurements }) {
-  const latest = measurements[0];
-  
-  const alerts = measurements.filter(m => 
-    m.status === 'requiere_atencion' || m.status === 'critico'
-  ).length;
+  const totalMeasurements = measurements.length;
+  const compliantMeasurements = measurements.filter(m => m.complies_with_rd742).length;
+  const nonCompliantMeasurements = measurements.filter(m => !m.complies_with_rd742).length;
+  const criticalStatus = measurements.filter(m => m.status === 'no_apto' || m.status === 'critico').length;
 
-  const avgPh = measurements.slice(0, 7).length > 0
-    ? measurements.slice(0, 7).reduce((sum, m) => sum + (m.ph_level || 0), 0) / measurements.slice(0, 7).length
-    : 0;
-
-  const avgTemp = measurements.slice(0, 7).length > 0
-    ? measurements.slice(0, 7).reduce((sum, m) => sum + (m.water_temperature || 0), 0) / measurements.slice(0, 7).length
+  const complianceRate = totalMeasurements > 0 
+    ? ((compliantMeasurements / totalMeasurements) * 100).toFixed(1)
     : 0;
 
   const stats = [
     {
-      title: "Último pH",
-      value: latest?.ph_level ? `${latest.ph_level.toFixed(1)}` : '-',
-      subtitle: `Promedio 7 días: ${avgPh.toFixed(1)}`,
-      icon: Droplet,
-      gradient: "from-blue-400 to-blue-600",
-      status: latest?.ph_level && (latest.ph_level < 7.2 || latest.ph_level > 7.6) ? 'warning' : 'ok'
+      title: "Total Mediciones",
+      value: totalMeasurements,
+      icon: Activity,
+      gradient: "from-cyan-500 to-blue-500",
+      bgColor: "bg-cyan-50",
+      textColor: "text-cyan-700"
     },
     {
-      title: "Cloro Libre",
-      value: latest?.free_chlorine ? `${latest.free_chlorine.toFixed(2)} mg/L` : '-',
-      subtitle: latest?.pool_name?.replace(/_/g, ' ') || 'Sin datos',
-      icon: Waves,
-      gradient: "from-cyan-400 to-teal-500",
-      status: latest?.free_chlorine && (latest.free_chlorine < 0.5 || latest.free_chlorine > 2.0) ? 'warning' : 'ok'
+      title: "Cumple RD 742/2013",
+      value: compliantMeasurements,
+      subtitle: `${complianceRate}% cumplimiento`,
+      icon: CheckCircle,
+      gradient: "from-green-500 to-emerald-500",
+      bgColor: "bg-green-50",
+      textColor: "text-green-700"
     },
     {
-      title: "Temperatura",
-      value: latest?.water_temperature ? `${latest.water_temperature.toFixed(1)} °C` : '-',
-      subtitle: `Promedio 7 días: ${avgTemp.toFixed(1)} °C`,
-      icon: ThermometerSun,
-      gradient: "from-orange-400 to-red-500"
-    },
-    {
-      title: "Alertas Activas",
-      value: alerts.toString(),
-      subtitle: alerts === 0 ? 'Todo en orden' : 'Requieren atención',
+      title: "No Cumple Normativa",
+      value: nonCompliantMeasurements,
       icon: AlertTriangle,
-      gradient: alerts === 0 ? "from-green-500 to-emerald-500" : "from-red-500 to-orange-500",
-      status: alerts > 0 ? 'alert' : 'ok'
+      gradient: "from-orange-500 to-red-500",
+      bgColor: "bg-orange-50",
+      textColor: "text-orange-700"
+    },
+    {
+      title: "Estado Crítico/No Apto",
+      value: criticalStatus,
+      icon: FileCheck,
+      gradient: "from-red-500 to-pink-600",
+      bgColor: "bg-red-50",
+      textColor: "text-red-700"
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat, index) => (
-        <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur overflow-hidden">
-          <div className={`h-1 bg-gradient-to-r ${stat.gradient}`} />
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
-                  {stat.title}
-                </p>
-                <h3 className="text-2xl font-bold text-slate-800">
-                  {stat.value}
-                </h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {stats.map((stat, index) => {
+        const Icon = stat.icon;
+        return (
+          <Card key={index} className="border-0 shadow-lg overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600 mb-1">
+                    {stat.title}
+                  </p>
+                  <p className={`text-3xl font-bold ${stat.textColor}`}>
+                    {stat.value}
+                  </p>
+                  {stat.subtitle && (
+                    <p className="text-xs text-slate-500 mt-1">{stat.subtitle}</p>
+                  )}
+                </div>
+                <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center`}>
+                  <Icon className={`w-6 h-6 ${stat.textColor}`} />
+                </div>
               </div>
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-md ${stat.status === 'warning' || stat.status === 'alert' ? 'animate-pulse' : ''}`}>
-                <stat.icon className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              {stat.status === 'warning' && (
-                <div className="w-2 h-2 bg-orange-500 rounded-full" />
-              )}
-              {stat.status === 'alert' && (
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              )}
-              <p className="text-xs text-slate-500 font-medium">{stat.subtitle}</p>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }
