@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText } from "lucide-react";
+import { Plus, FileText, Book } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import PoolForm from "../components/pool/PoolForm";
 import PoolStats from "../components/pool/PoolStats";
 import PoolList from "../components/pool/PoolList";
 import PoolComplianceReport from "../components/pool/PoolComplianceReport";
+import PoolRegulationFAQ from "../components/pool/PoolRegulationFAQ";
 
 export default function PoolPage() {
   const [showForm, setShowForm] = useState(false);
@@ -119,6 +120,10 @@ export default function PoolPage() {
               <FileText className="w-4 h-4" />
               Informe Cumplimiento
             </TabsTrigger>
+            <TabsTrigger value="regulation" className="gap-2">
+              <Book className="w-4 h-4" />
+              Normativa y FAQ
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="measurements" className="mt-6">
@@ -131,6 +136,10 @@ export default function PoolPage() {
 
           <TabsContent value="compliance" className="mt-6">
             <PoolComplianceReport measurements={measurements} />
+          </TabsContent>
+
+          <TabsContent value="regulation" className="mt-6">
+            <PoolRegulationFAQ />
           </TabsContent>
         </Tabs>
       </div>
