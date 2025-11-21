@@ -27,6 +27,11 @@ export default function BlueprintsPage() {
     queryFn: () => base44.entities.Equipment.list(),
   });
 
+  const { data: tasks = [] } = useQuery({
+    queryKey: ['maintenanceTasks'],
+    queryFn: () => base44.entities.MaintenanceTask.list('-scheduled_date'),
+  });
+
   const { data: annotations = [] } = useQuery({
     queryKey: ['annotations', selectedBlueprint?.id],
     queryFn: () => selectedBlueprint ? base44.entities.BlueprintAnnotation.filter({ blueprint_id: selectedBlueprint.id }) : [],
@@ -91,6 +96,7 @@ export default function BlueprintsPage() {
               <BlueprintEditor
                 onSave={handleEditorSave}
                 onCancel={() => setShowEditor(false)}
+                equipment={equipment}
               />
             </motion.div>
           )}
@@ -132,6 +138,7 @@ export default function BlueprintsPage() {
                 blueprint={selectedBlueprint}
                 equipment={equipment}
                 annotations={annotations}
+                tasks={tasks}
                 onBack={() => setActiveTab("list")}
               />
             )}

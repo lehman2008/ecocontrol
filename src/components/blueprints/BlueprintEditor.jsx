@@ -37,15 +37,15 @@ const TOOLS = {
 };
 
 const ICONS = [
-  { icon: Home, label: "Habitación", color: "#3b82f6" },
-  { icon: DoorOpen, label: "Puerta", color: "#10b981" },
-  { icon: Droplets, label: "Agua", color: "#06b6d4" },
-  { icon: Zap, label: "Eléctrico", color: "#f59e0b" },
-  { icon: Wind, label: "HVAC", color: "#8b5cf6" },
-  { icon: Flame, label: "Gas", color: "#ef4444" }
+  { icon: Home, label: "Habitación", color: "#3b82f6", layer: "general" },
+  { icon: DoorOpen, label: "Puerta", color: "#10b981", layer: "general" },
+  { icon: Droplets, label: "Agua", color: "#06b6d4", layer: "fontaneria" },
+  { icon: Zap, label: "Eléctrico", color: "#f59e0b", layer: "electricidad" },
+  { icon: Wind, label: "HVAC", color: "#8b5cf6", layer: "hvac" },
+  { icon: Flame, label: "Gas", color: "#ef4444", layer: "gas" }
 ];
 
-export default function BlueprintEditor({ onSave, onCancel }) {
+export default function BlueprintEditor({ onSave, onCancel, equipment = [] }) {
   const canvasRef = useRef(null);
   const [tool, setTool] = useState('pen');
   const [color, setColor] = useState('#000000');
@@ -60,6 +60,8 @@ export default function BlueprintEditor({ onSave, onCancel }) {
   const [blueprintZone, setBlueprintZone] = useState("general");
   const [scale, setScale] = useState("1:100");
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedEquipment, setSelectedEquipment] = useState(null);
+  const [showEquipmentList, setShowEquipmentList] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -162,6 +164,14 @@ export default function BlueprintEditor({ onSave, onCancel }) {
           ctx.beginPath();
           ctx.arc(element.x, element.y, 15, 0, Math.PI * 2);
           ctx.fill();
+          
+          // Borde si tiene equipo vinculado
+          if (element.equipment_id) {
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+          }
+          
           ctx.fillStyle = 'white';
           ctx.font = 'bold 10px Arial';
           ctx.textAlign = 'center';
@@ -190,12 +200,16 @@ export default function BlueprintEditor({ onSave, onCancel }) {
         x,
         y,
         color: selectedIcon.color,
-        iconLabel: selectedIcon.label
+        iconLabel: selectedIcon.label,
+        layer: selectedIcon.layer || 'general',
+        equipment_id: selectedEquipment || null
       };
       const newElements = [...elements, newIcon];
       setElements(newElements);
       saveToHistory(newElements);
       setSelectedIcon(null);
+      setSelectedEquipment(null);
+      setShowEquipmentList(false);
       return;
     }
 
@@ -507,7 +521,10 @@ export default function BlueprintEditor({ onSave, onCancel }) {
                   key={index}
                   variant={selectedIcon?.label === iconItem.label ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setSelectedIcon(iconItem)}
+                  onClick={() => {
+                    setSelectedIcon(iconItem);
+                    setShowEquipmentList(true);
+                  }}
                   className="w-full justify-start"
                   style={selectedIcon?.label === iconItem.label ? { backgroundColor: iconItem.color } : {}}
                 >
@@ -518,6 +535,36 @@ export default function BlueprintEditor({ onSave, onCancel }) {
             })}
           </CardContent>
         </Card>
+
+        {/* Vincular equipo */}
+        {showEquipmentList && selectedIcon && (
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-50">
+            <CardHeader className="pb-3 border-b border-blue-100">
+              <CardTitle className="text-sm">Vincular Equipo (Opcional)</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-3 space-y-2 max-h-48 overflow-y-auto">
+              <Button
+                variant={!selectedEquipment ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedEquipment(null)}
+                className="w-full justify-start text-xs"
+              >
+                Sin vincular
+              </Button>
+              {equipment.map(eq => (
+                <Button
+                  key={eq.id}
+                  variant={selectedEquipment === eq.id ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedEquipment(eq.id)}
+                  className="w-full justify-start text-xs"
+                >
+                  {eq.name} - {eq.zone}
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Guardar */}
         <Button

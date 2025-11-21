@@ -7,8 +7,8 @@ export default function BlueprintCanvas({
   onPanChange, 
   pins, 
   equipment,
-  annotations,
-  activeLayers,
+  annotations = [],
+  activeLayers = [],
   onClick,
   measuring
 }) {
@@ -71,9 +71,12 @@ export default function BlueprintCanvas({
       ctx.stroke();
     }
 
-    // Dibujar anotaciones
+    // Dibujar anotaciones (filtradas por capa activa)
     if (activeLayers.includes('annotations')) {
-      annotations.forEach(annotation => {
+      annotations.filter(annotation => {
+        if (!annotation.layer) return true;
+        return activeLayers.includes(annotation.layer);
+      }).forEach(annotation => {
         if (annotation.type === 'note') {
           ctx.fillStyle = annotation.color || '#3b82f6';
           ctx.beginPath();
@@ -184,7 +187,20 @@ export default function BlueprintCanvas({
       const rect = canvasRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      onClick(x, y);
+      
+      // Detectar clic en pin de equipo
+      let clickedEquipmentId = null;
+      for (const pin of pins) {
+        const pinX = pin.x * zoom + pan.x;
+        const pinY = pin.y * zoom + pan.y;
+        const dist = Math.sqrt(Math.pow(x - pinX, 2) + Math.pow(y - pinY, 2));
+        if (dist < 20 && pin.equipment_id) {
+          clickedEquipmentId = pin.equipment_id;
+          break;
+        }
+      }
+      
+      onClick(x, y, clickedEquipmentId);
     }
     setIsDragging(false);
   };

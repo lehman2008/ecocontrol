@@ -12,19 +12,25 @@ import {
   Ruler,
   MessageSquare,
   Layers,
-  Save
+  Save,
+  Droplets,
+  Zap,
+  Wind,
+  Flame
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import BlueprintCanvas from "./BlueprintCanvas";
 import EquipmentPanel from "./EquipmentPanel";
+import EquipmentInfoPanel from "./EquipmentInfoPanel";
 
-export default function BlueprintViewer({ blueprint, equipment, annotations, onBack }) {
+export default function BlueprintViewer({ blueprint, equipment, annotations, onBack, tasks = [] }) {
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [tool, setTool] = useState('pan');
-  const [activeLayers, setActiveLayers] = useState(['equipment', 'annotations']);
+  const [activeLayers, setActiveLayers] = useState(['equipment', 'annotations', 'fontaneria', 'electricidad', 'hvac', 'gas', 'general']);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
+  const [clickedEquipment, setClickedEquipment] = useState(null);
   const [pins, setPins] = useState(blueprint.equipment_pins || []);
   const [tempAnnotations, setTempAnnotations] = useState([]);
   const [measuring, setMeasuring] = useState(null);
@@ -53,7 +59,14 @@ export default function BlueprintViewer({ blueprint, equipment, annotations, onB
     setPan({ x: 0, y: 0 });
   };
 
-  const handleCanvasClick = (x, y) => {
+  const handleCanvasClick = (x, y, clickedEquipmentId) => {
+    // Si se hizo clic en un equipo, mostrarlo
+    if (clickedEquipmentId && tool === 'pan') {
+      const eq = equipment.find(e => e.id === clickedEquipmentId);
+      setClickedEquipment(eq);
+      return;
+    }
+
     if (tool === 'pin' && selectedEquipment) {
       const newPins = [...pins, {
         equipment_id: selectedEquipment,
@@ -124,7 +137,15 @@ export default function BlueprintViewer({ blueprint, equipment, annotations, onB
   };
 
   return (
-    <div className="grid lg:grid-cols-4 gap-6">
+    <div className="grid lg:grid-cols-4 gap-6 relative">
+      {clickedEquipment && (
+        <EquipmentInfoPanel
+          equipment={clickedEquipment}
+          tasks={tasks}
+          onClose={() => setClickedEquipment(null)}
+        />
+      )}
+      
       <div className="lg:col-span-3 space-y-4">
         <Card className="border-0 shadow-xl bg-white/80 backdrop-blur">
           <CardHeader className="pb-4 border-b border-slate-100">
@@ -260,6 +281,64 @@ export default function BlueprintViewer({ blueprint, equipment, annotations, onB
                 type="checkbox"
                 checked={activeLayers.includes('annotations')}
                 onChange={() => toggleLayer('annotations')}
+                className="w-4 h-4"
+              />
+            </div>
+            <div className="border-t border-slate-200 my-2" />
+            <div className="flex items-center justify-between p-2 rounded hover:bg-slate-50">
+              <span className="text-sm font-medium flex items-center gap-2">
+                <Droplets className="w-3 h-3 text-cyan-500" />
+                Fontanería
+              </span>
+              <input
+                type="checkbox"
+                checked={activeLayers.includes('fontaneria')}
+                onChange={() => toggleLayer('fontaneria')}
+                className="w-4 h-4"
+              />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded hover:bg-slate-50">
+              <span className="text-sm font-medium flex items-center gap-2">
+                <Zap className="w-3 h-3 text-amber-500" />
+                Electricidad
+              </span>
+              <input
+                type="checkbox"
+                checked={activeLayers.includes('electricidad')}
+                onChange={() => toggleLayer('electricidad')}
+                className="w-4 h-4"
+              />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded hover:bg-slate-50">
+              <span className="text-sm font-medium flex items-center gap-2">
+                <Wind className="w-3 h-3 text-purple-500" />
+                HVAC
+              </span>
+              <input
+                type="checkbox"
+                checked={activeLayers.includes('hvac')}
+                onChange={() => toggleLayer('hvac')}
+                className="w-4 h-4"
+              />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded hover:bg-slate-50">
+              <span className="text-sm font-medium flex items-center gap-2">
+                <Flame className="w-3 h-3 text-red-500" />
+                Gas
+              </span>
+              <input
+                type="checkbox"
+                checked={activeLayers.includes('gas')}
+                onChange={() => toggleLayer('gas')}
+                className="w-4 h-4"
+              />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded hover:bg-slate-50">
+              <span className="text-sm font-medium">General</span>
+              <input
+                type="checkbox"
+                checked={activeLayers.includes('general')}
+                onChange={() => toggleLayer('general')}
                 className="w-4 h-4"
               />
             </div>
