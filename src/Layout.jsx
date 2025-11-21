@@ -15,7 +15,8 @@ import {
   FileText,
   Radio,
   Map,
-  Bell
+  Bell,
+  Shield
 } from "lucide-react";
 import {
   Sidebar,
