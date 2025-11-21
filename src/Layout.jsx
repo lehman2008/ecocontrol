@@ -16,7 +16,8 @@ import {
   Radio,
   Map,
   Bell,
-  Shield
+  Shield,
+  FireExtinguisher
 } from "lucide-react";
 import {
   Sidebar,
@@ -165,6 +166,14 @@ function LayoutContent({ children, currentPageName }) {
       gradient: "from-cyan-400 to-teal-500",
       category: "consumption",
       permission: "pool"
+    },
+    {
+      title: "Contra Incendios",
+      url: createPageUrl("FireSafety"),
+      icon: FireExtinguisher,
+      gradient: "from-red-500 to-orange-600",
+      category: "management",
+      permission: "maintenance"
     },
   ];
 

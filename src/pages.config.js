@@ -13,6 +13,7 @@ import Blueprints from './pages/Blueprints';
 import Documents from './pages/Documents';
 import Alerts from './pages/Alerts';
 import Admin from './pages/Admin';
+import FireSafety from './pages/FireSafety';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "Documents": Documents,
     "Alerts": Alerts,
     "Admin": Admin,
+    "FireSafety": FireSafety,
 }
 
 export const pagesConfig = {
