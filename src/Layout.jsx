@@ -36,11 +36,13 @@ import { Button } from "@/components/ui/button";
 import { LanguageProvider, useLanguage } from "@/components/shared/LanguageContext";
 import LanguageSelector from "@/components/shared/LanguageSelector";
 import NotificationBell from "@/components/shared/NotificationBell";
+import { usePermissions } from "@/components/shared/PermissionGate";
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
   const [user, setUser] = React.useState(null);
   const { t } = useLanguage();
+  const { hasPermission } = usePermissions();
 
   React.useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
@@ -56,113 +58,145 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Dashboard"),
       icon: LayoutDashboard,
       gradient: "from-blue-500 to-cyan-500",
-      category: "principal"
+      category: "principal",
+      permission: "dashboard"
     },
     {
       title: t('analytics'),
       url: createPageUrl("Analytics"),
       icon: BarChart3,
       gradient: "from-violet-500 to-purple-600",
-      category: "principal"
+      category: "principal",
+      permission: "analytics"
     },
     {
       title: t('reports'),
       url: createPageUrl("Reports"),
       icon: FileText,
       gradient: "from-pink-500 to-rose-600",
-      category: "principal"
+      category: "principal",
+      permission: "reports"
     },
     {
       title: "Alertas",
       url: createPageUrl("Alerts"),
       icon: Bell,
       gradient: "from-orange-500 to-red-600",
-      category: "principal"
+      category: "principal",
+      permission: "alerts"
     },
     {
       title: t('equipment'),
       url: createPageUrl("Equipment"),
       icon: Package,
       gradient: "from-indigo-500 to-purple-500",
-      category: "management"
+      category: "management",
+      permission: "equipment"
     },
     {
       title: t('maintenance'),
       url: createPageUrl("Maintenance"),
       icon: Wrench,
       gradient: "from-green-500 to-emerald-500",
-      category: "management"
+      category: "management",
+      permission: "maintenance"
     },
     {
       title: t('occupancy'),
       url: createPageUrl("Occupancy"),
       icon: Users,
       gradient: "from-purple-500 to-pink-500",
-      category: "management"
+      category: "management",
+      permission: "occupancy"
     },
     {
       title: t('blueprints'),
       url: createPageUrl("Blueprints"),
       icon: Map,
       gradient: "from-blue-600 to-indigo-700",
-      category: "management"
+      category: "management",
+      permission: "blueprints"
     },
     {
       title: t('documents'),
       url: createPageUrl("Documents"),
       icon: FileText,
       gradient: "from-cyan-600 to-blue-700",
-      category: "management"
+      category: "management",
+      permission: "documents"
     },
     {
       title: t('iot'),
       url: createPageUrl("IoT"),
       icon: Radio,
       gradient: "from-cyan-500 to-blue-600",
-      category: "iot"
+      category: "iot",
+      permission: "iot"
     },
     {
       title: t('energy'),
       url: createPageUrl("Energy"),
       icon: Zap,
       gradient: "from-amber-500 to-orange-500",
-      category: "consumption"
+      category: "consumption",
+      permission: "energy"
     },
     {
       title: t('water'),
       url: createPageUrl("Water"),
       icon: Droplets,
       gradient: "from-blue-400 to-blue-600",
-      category: "consumption"
+      category: "consumption",
+      permission: "water"
     },
     {
       title: t('fuel'),
       url: createPageUrl("Fuel"),
       icon: Flame,
       gradient: "from-orange-500 to-red-600",
-      category: "consumption"
+      category: "consumption",
+      permission: "fuel"
     },
     {
       title: t('pool'),
       url: createPageUrl("Pool"),
       icon: Waves,
       gradient: "from-cyan-400 to-teal-500",
-      category: "consumption"
+      category: "consumption",
+      permission: "pool"
     },
   ];
+
+  // Filtrar por permisos
+  const filteredNavigationItems = navigationItems.filter(item => 
+    !item.permission || hasPermission(item.permission)
+  );
 
   const categories = {
     principal: t('principal'),
     management: t('management'),
     iot: t('iotSensors'),
-    consumption: t('consumption')
+    consumption: t('consumption'),
+    admin: 'Administración'
   };
 
-  const groupedNav = navigationItems.reduce((acc, item) => {
+  const groupedNav = filteredNavigationItems.reduce((acc, item) => {
     if (!acc[item.category]) acc[item.category] = [];
     acc[item.category].push(item);
     return acc;
   }, {});
+
+  // Añadir Admin si es admin
+  if (user?.role === 'admin') {
+    if (!groupedNav.admin) groupedNav.admin = [];
+    groupedNav.admin.push({
+      title: 'Administración',
+      url: createPageUrl("Admin"),
+      icon: Shield,
+      gradient: "from-purple-500 to-pink-600",
+      category: "admin"
+    });
+  }
 
   return (
     <SidebarProvider>
