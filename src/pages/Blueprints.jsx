@@ -8,9 +8,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import BlueprintUpload from "../components/blueprints/BlueprintUpload";
 import BlueprintList from "../components/blueprints/BlueprintList";
 import BlueprintViewer from "../components/blueprints/BlueprintViewer";
+import BlueprintEditor from "../components/blueprints/BlueprintEditor";
 
 export default function BlueprintsPage() {
   const [showUpload, setShowUpload] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
   const [selectedBlueprint, setSelectedBlueprint] = useState(null);
   const [activeTab, setActiveTab] = useState("list");
   const queryClient = useQueryClient();
@@ -44,6 +46,11 @@ export default function BlueprintsPage() {
     setActiveTab("viewer");
   };
 
+  const handleEditorSave = () => {
+    setShowEditor(false);
+    queryClient.invalidateQueries({ queryKey: ['blueprints'] });
+  };
+
   return (
     <div className="p-4 md:p-8 min-h-screen">
       <div className="max-w-[1800px] mx-auto space-y-6">
@@ -56,17 +63,38 @@ export default function BlueprintsPage() {
               Planos interactivos con ubicación de equipos y anotaciones
             </p>
           </div>
-          <Button
-            onClick={() => setShowUpload(!showUpload)}
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Subir Plano
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setShowEditor(!showEditor)}
+              className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Crear Plano
+            </Button>
+            <Button
+              onClick={() => setShowUpload(!showUpload)}
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Subir Plano
+            </Button>
+          </div>
         </div>
 
         <AnimatePresence>
-          {showUpload && (
+          {showEditor && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <BlueprintEditor
+                onSave={handleEditorSave}
+                onCancel={() => setShowEditor(false)}
+              />
+            </motion.div>
+          )}
+          {showUpload && !showEditor && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -81,13 +109,14 @@ export default function BlueprintsPage() {
           )}
         </AnimatePresence>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-slate-100">
-            <TabsTrigger value="list">Todos los Planos</TabsTrigger>
-            <TabsTrigger value="viewer" disabled={!selectedBlueprint}>
-              Visor Interactivo
-            </TabsTrigger>
-          </TabsList>
+        {!showEditor && (
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="bg-slate-100">
+              <TabsTrigger value="list">Todos los Planos</TabsTrigger>
+              <TabsTrigger value="viewer" disabled={!selectedBlueprint}>
+                Visor Interactivo
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="list" className="mt-6">
             <BlueprintList
@@ -107,7 +136,8 @@ export default function BlueprintsPage() {
               />
             )}
           </TabsContent>
-        </Tabs>
+          </Tabs>
+        )}
       </div>
     </div>
   );
