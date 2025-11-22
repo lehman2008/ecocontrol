@@ -21,9 +21,10 @@ export const translations = {
     
     // Categories
     principal: "Principal",
-    management: "Gestión",
-    iotSensors: "IoT & Sensores",
-    consumption: "Consumos",
+    generalManagement: "Gestión General",
+    supplySystems: "Suministro y Evacuación",
+    serviceSystems: "Servicios y Confort",
+    specializedSystems: "Sistemas Especializados",
     
     // Common
     save: "Guardar",
@@ -65,9 +66,10 @@ export const translations = {
     
     // Categories
     principal: "Main",
-    management: "Management",
-    iotSensors: "IoT & Sensors",
-    consumption: "Consumption",
+    generalManagement: "General Management",
+    supplySystems: "Supply & Drainage",
+    serviceSystems: "Services & Comfort",
+    specializedSystems: "Specialized Systems",
     
     // Common
     save: "Save",
@@ -109,9 +111,10 @@ export const translations = {
     
     // Categories
     principal: "Principal",
-    management: "Gestion",
-    iotSensors: "IoT & Capteurs",
-    consumption: "Consommation",
+    generalManagement: "Gestion Générale",
+    supplySystems: "Approvisionnement et Évacuation",
+    serviceSystems: "Services et Confort",
+    specializedSystems: "Systèmes Spécialisés",
     
     // Common
     save: "Enregistrer",
@@ -153,9 +156,10 @@ export const translations = {
     
     // Categories
     principal: "Haupt",
-    management: "Verwaltung",
-    iotSensors: "IoT & Sensoren",
-    consumption: "Verbrauch",
+    generalManagement: "Allgemeine Verwaltung",
+    supplySystems: "Versorgung und Entsorgung",
+    serviceSystems: "Dienstleistungen und Komfort",
+    specializedSystems: "Spezialisierte Systeme",
     
     // Common
     save: "Speichern",
@@ -197,9 +201,10 @@ export const translations = {
     
     // Categories
     principal: "Principal",
-    management: "Gestão",
-    iotSensors: "IoT & Sensores",
-    consumption: "Consumo",
+    generalManagement: "Gestão Geral",
+    supplySystems: "Fornecimento e Evacuação",
+    serviceSystems: "Serviços e Conforto",
+    specializedSystems: "Sistemas Especializados",
     
     // Common
     save: "Guardar",

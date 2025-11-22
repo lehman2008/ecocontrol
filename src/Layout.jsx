@@ -92,7 +92,7 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Equipment"),
       icon: Package,
       gradient: "from-indigo-500 to-purple-500",
-      category: "management",
+      category: "general_management",
       permission: "equipment"
     },
     {
@@ -100,7 +100,7 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Maintenance"),
       icon: Wrench,
       gradient: "from-green-500 to-emerald-500",
-      category: "management",
+      category: "general_management",
       permission: "maintenance"
     },
     {
@@ -108,7 +108,7 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Occupancy"),
       icon: Users,
       gradient: "from-purple-500 to-pink-500",
-      category: "management",
+      category: "general_management",
       permission: "occupancy"
     },
     {
@@ -116,7 +116,7 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Blueprints"),
       icon: Map,
       gradient: "from-blue-600 to-indigo-700",
-      category: "management",
+      category: "general_management",
       permission: "blueprints"
     },
     {
@@ -124,23 +124,15 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Documents"),
       icon: FileText,
       gradient: "from-cyan-600 to-blue-700",
-      category: "management",
+      category: "general_management",
       permission: "documents"
-    },
-    {
-      title: t('iot'),
-      url: createPageUrl("IoT"),
-      icon: Radio,
-      gradient: "from-cyan-500 to-blue-600",
-      category: "iot",
-      permission: "iot"
     },
     {
       title: t('energy'),
       url: createPageUrl("Energy"),
       icon: Zap,
       gradient: "from-amber-500 to-orange-500",
-      category: "consumption",
+      category: "supply_systems",
       permission: "energy"
     },
     {
@@ -148,7 +140,7 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Water"),
       icon: Droplets,
       gradient: "from-blue-400 to-blue-600",
-      category: "consumption",
+      category: "supply_systems",
       permission: "water"
     },
     {
@@ -156,15 +148,23 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("Fuel"),
       icon: Flame,
       gradient: "from-orange-500 to-red-600",
-      category: "consumption",
+      category: "supply_systems",
       permission: "fuel"
+    },
+    {
+      title: t('iot'),
+      url: createPageUrl("IoT"),
+      icon: Radio,
+      gradient: "from-cyan-500 to-blue-600",
+      category: "service_systems",
+      permission: "iot"
     },
     {
       title: t('pool'),
       url: createPageUrl("Pool"),
       icon: Waves,
       gradient: "from-cyan-400 to-teal-500",
-      category: "consumption",
+      category: "specialized_systems",
       permission: "pool"
     },
     {
@@ -172,7 +172,7 @@ function LayoutContent({ children, currentPageName }) {
       url: createPageUrl("FireSafety"),
       icon: FireExtinguisher,
       gradient: "from-red-500 to-orange-600",
-      category: "management",
+      category: "specialized_systems",
       permission: "maintenance"
     },
   ];
@@ -184,9 +184,10 @@ function LayoutContent({ children, currentPageName }) {
 
   const categories = {
     principal: t('principal'),
-    management: t('management'),
-    iot: t('iotSensors'),
-    consumption: t('consumption'),
+    general_management: t('generalManagement'),
+    supply_systems: t('supplySystems'),
+    service_systems: t('serviceSystems'),
+    specialized_systems: t('specializedSystems'),
     admin: 'Administración'
   };
 
