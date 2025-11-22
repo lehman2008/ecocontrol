@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Plus, Flame } from "lucide-react";
+import { Plus, Flame, Book } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import FuelForm from "../components/fuel/FuelForm";
 import FuelList from "../components/fuel/FuelList";
 import FuelStats from "../components/fuel/FuelStats";
 import FuelCharts from "../components/fuel/FuelCharts";
+import FuelRegulationFAQ from "../components/fuel/FuelRegulationFAQ";
 
 export default function FuelPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingReading, setEditingReading] = useState(null);
+  const [activeTab, setActiveTab] = useState("readings");
   const queryClient = useQueryClient();
 
   const { data: readings = [], isLoading } = useQuery({
@@ -99,15 +102,28 @@ export default function FuelPage() {
           )}
         </AnimatePresence>
 
-        {/* Charts */}
-        <FuelCharts readings={readings} />
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="bg-slate-100">
+            <TabsTrigger value="readings">Lecturas</TabsTrigger>
+            <TabsTrigger value="regulation" className="gap-2">
+              <Book className="w-4 h-4" />
+              Normativa y FAQ
+            </TabsTrigger>
+          </TabsList>
 
-        {/* List */}
-        <FuelList 
-          readings={readings}
-          isLoading={isLoading}
-          onEdit={handleEdit}
-        />
+          <TabsContent value="readings" className="mt-6 space-y-6">
+            <FuelCharts readings={readings} />
+            <FuelList 
+              readings={readings}
+              isLoading={isLoading}
+              onEdit={handleEdit}
+            />
+          </TabsContent>
+
+          <TabsContent value="regulation" className="mt-6">
+            <FuelRegulationFAQ />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

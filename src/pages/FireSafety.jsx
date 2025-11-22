@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Plus, Flame } from "lucide-react";
+import { Plus, Flame, Book } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import FireSafetyForm from "../components/firesafety/FireSafetyForm";
 import FireSafetyStats from "../components/firesafety/FireSafetyStats";
 import FireSafetyList from "../components/firesafety/FireSafetyList";
+import FireSafetyRegulationFAQ from "../components/firesafety/FireSafetyRegulationFAQ";
 
 export default function FireSafetyPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
+  const [activeTab, setActiveTab] = useState("inspections");
   const queryClient = useQueryClient();
 
   const { data: records = [], isLoading } = useQuery({
@@ -126,11 +129,27 @@ export default function FireSafetyPage() {
           )}
         </AnimatePresence>
 
-        <FireSafetyList 
-          records={records}
-          isLoading={isLoading}
-          onEdit={handleEdit}
-        />
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="bg-slate-100">
+            <TabsTrigger value="inspections">Inspecciones</TabsTrigger>
+            <TabsTrigger value="regulation" className="gap-2">
+              <Book className="w-4 h-4" />
+              Normativa y FAQ
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="inspections" className="mt-6">
+            <FireSafetyList 
+              records={records}
+              isLoading={isLoading}
+              onEdit={handleEdit}
+            />
+          </TabsContent>
+
+          <TabsContent value="regulation" className="mt-6">
+            <FireSafetyRegulationFAQ />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

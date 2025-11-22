@@ -3,15 +3,18 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Zap } from "lucide-react";
+import { Plus, Zap, Book } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import EnergyForm from "../components/energy/EnergyForm";
 import EnergyList from "../components/energy/EnergyList";
 import EnergyStats from "../components/energy/EnergyStats";
+import EnergyRegulationFAQ from "../components/energy/EnergyRegulationFAQ";
 
 export default function EnergyPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingReading, setEditingReading] = useState(null);
+  const [activeTab, setActiveTab] = useState("readings");
   const queryClient = useQueryClient();
 
   const { data: readings = [], isLoading } = useQuery({
@@ -99,12 +102,27 @@ export default function EnergyPage() {
           )}
         </AnimatePresence>
 
-        {/* List */}
-        <EnergyList 
-          readings={readings}
-          isLoading={isLoading}
-          onEdit={handleEdit}
-        />
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="bg-slate-100">
+            <TabsTrigger value="readings">Lecturas</TabsTrigger>
+            <TabsTrigger value="regulation" className="gap-2">
+              <Book className="w-4 h-4" />
+              Normativa y FAQ
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="readings" className="mt-6">
+            <EnergyList 
+              readings={readings}
+              isLoading={isLoading}
+              onEdit={handleEdit}
+            />
+          </TabsContent>
+
+          <TabsContent value="regulation" className="mt-6">
+            <EnergyRegulationFAQ />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
