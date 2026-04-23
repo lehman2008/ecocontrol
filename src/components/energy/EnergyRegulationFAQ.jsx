@@ -189,7 +189,7 @@ Proporciona una respuesta clara, precisa y basada en la normativa vigente. Si es
             </div>
             <div className="p-4 bg-cyan-50 rounded-lg">
               <p className="font-semibold text-slate-800 mb-1">BACS Obligatorio</p>
-              <p className="text-sm text-slate-600">Potencia > 290 kW</p>
+              <p className="text-sm text-slate-600">{"Potencia > 290 kW"}</p>
             </div>
             <div className="p-4 bg-yellow-50 rounded-lg">
               <p className="font-semibold text-slate-800 mb-1">Iluminación LED</p>

@@ -18,7 +18,7 @@ export function usePermissions() {
   });
 
   const hasPermission = (permission) => {
-    if (!user) return false;
+    if (!user) return true; // show menu while loading to avoid empty sidebar
     if (user.role === 'admin') return true;
     
     const permissions = ROLE_PERMISSIONS[user.role] || [];

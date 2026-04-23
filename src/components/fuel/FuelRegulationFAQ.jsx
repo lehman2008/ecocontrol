@@ -181,7 +181,7 @@ Proporciona una respuesta clara, precisa y basada en la normativa vigente. Si es
             </div>
             <div className="p-4 bg-yellow-50 rounded-lg">
               <p className="font-semibold text-slate-800 mb-1">Detector de Gas</p>
-              <p className="text-sm text-slate-600">Obligatorio > 50 kW en cocinas</p>
+              <p className="text-sm text-slate-600">{"Obligatorio > 50 kW en cocinas"}</p>
             </div>
             <div className="p-4 bg-blue-50 rounded-lg">
               <p className="font-semibold text-slate-800 mb-1">Presión Instalación Típica</p>
