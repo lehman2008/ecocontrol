@@ -39,6 +39,8 @@ import { LanguageProvider, useLanguage } from "@/components/shared/LanguageConte
 import LanguageSelector from "@/components/shared/LanguageSelector";
 import NotificationBell from "@/components/shared/NotificationBell";
 import { usePermissions } from "@/components/shared/PermissionGate";
+import { ThemeProvider } from "@/components/shared/ThemeContext";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
@@ -247,8 +249,8 @@ function LayoutContent({ children, currentPageName }) {
         }
       `}</style>
       
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
-        <Sidebar className="border-r-0 shadow-lg glass-effect">
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+        <Sidebar className="border-r-0 shadow-lg glass-effect dark:bg-slate-900/90 dark:border-slate-700/50">
           <SidebarHeader className="border-b border-white/50 p-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-cyan-500 to-teal-400 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
@@ -357,7 +359,7 @@ function LayoutContent({ children, currentPageName }) {
         </Sidebar>
 
         <main className="flex-1 flex flex-col overflow-hidden">
-          <header className="bg-white/60 backdrop-blur-md border-b border-white/80 px-6 py-4 shadow-sm">
+          <header className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border-b border-white/80 dark:border-slate-700/50 px-6 py-4 shadow-sm">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-4 md:hidden">
                 <SidebarTrigger className="hover:bg-slate-100 p-2 rounded-xl transition-all" />
@@ -365,6 +367,7 @@ function LayoutContent({ children, currentPageName }) {
               </div>
               <div className="hidden md:block" />
               <div className="flex items-center gap-3">
+                <ThemeToggle />
                 <NotificationBell />
                 <div className="md:hidden">
                   <LanguageSelector compact />
@@ -384,8 +387,10 @@ function LayoutContent({ children, currentPageName }) {
 
 export default function Layout({ children, currentPageName }) {
   return (
-    <LanguageProvider>
-      <LayoutContent children={children} currentPageName={currentPageName} />
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <LayoutContent children={children} currentPageName={currentPageName} />
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
